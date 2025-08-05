@@ -26,8 +26,8 @@ class ApplicationController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
-                'applications' => $applications->items(),
-                'pagination' => [
+                'applications' => [
+                    'data' => $applications->items(),
                     'current_page' => $applications->currentPage(),
                     'last_page' => $applications->lastPage(),
                     'per_page' => $applications->perPage(),
