@@ -68,6 +68,12 @@ class Application extends Model
             if (empty($application->allowed_scopes)) {
                 $application->allowed_scopes = ['read'];
             }
+            if (is_null($application->is_active)) {
+                $application->is_active = true;
+            }
+            if (empty($application->rate_limit)) {
+                $application->rate_limit = 1000;
+            }
         });
     }
 
