@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JoinRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +17,8 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [JoinRequestController::class, 'index'])->name('home');
+Route::post('/join-request', [JoinRequestController::class, 'store'])->name('join.request');
 
 // Authentication routes (Laravel UI required - install with: composer require laravel/ui)
 // Auth::routes();
