@@ -20,6 +20,11 @@ use App\Http\Controllers\JoinRequestController;
 Route::get('/', [JoinRequestController::class, 'index'])->name('home');
 Route::post('/join-request', [JoinRequestController::class, 'store'])->name('join.request');
 
+// Welcome page route
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
+
 // Authentication routes (Laravel UI required - install with: composer require laravel/ui)
 // Auth::routes();
 
