@@ -39,6 +39,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     
     Route::post('auth/logout', [AuthController::class, 'logout']);
+    Route::put('auth/profile', [AuthController::class, 'updateProfile']);
+    Route::delete('auth/account', [AuthController::class, 'deleteAccount']);
     
     // Applications API endpoints
     Route::apiResource('applications', ApplicationController::class);

@@ -354,4 +354,105 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Update authenticated user profile
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'sometimes|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $updateData = [];
+        
+        if ($request->has('name')) {
+            $updateData['name'] = $request->name;
+        }
+        
+        if ($request->has('email')) {
+            $updateData['email'] = $request->email;
+        }
+        
+        if ($request->has('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        if (!empty($updateData)) {
+            $user->update($updateData);
+        }
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'updated_at' => $user->updated_at,
+                'applications_count' => $user->applications()->count(),
+                'active_tokens_count' => $user->activeApiTokens()->count()
+            ]
+        ]);
+    }
+
+    /**
+     * Delete authenticated user account
+     */
+    public function deleteAccount(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+            'confirmation' => 'required|string|in:DELETE_MY_ACCOUNT',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Verify password
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Invalid password'
+            ], 401);
+        }
+
+        // Store user info before deletion
+        $userName = $user->name;
+        $userId = $user->id;
+
+        // Revoke all tokens
+        $user->tokens()->delete();
+        
+        // Revoke all API tokens
+        $user->apiTokens()->update(['is_active' => false]);
+
+        // Delete user account
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Account deleted successfully',
+            'deleted_user' => [
+                'id' => $userId,
+                'name' => $userName,
+                'deleted_at' => now()
+            ]
+        ]);
+    }
 }
+ 
