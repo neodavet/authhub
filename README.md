@@ -498,6 +498,38 @@ This project welcomes contributors! Here's how you can help:
 - Update documentation when adding new endpoints or features
 - Keep the [[memory:5237819]] approach: methodical, explanatory, and beginner-friendly
 
+## 🧪 Testing
+
+### API Integration Tests
+
+The project includes comprehensive cURL-based testing scripts for API endpoints:
+
+- **Location**: `scripts/testing/`
+- **Documentation**: See [Scripts README](scripts/README.md)
+
+#### Available Test Scripts:
+
+1. **User Registration Test** (`test_registration.sh`)
+   ```bash
+   cd scripts/testing
+   ./test_registration.sh
+   ```
+
+2. **Complete User CRUD Test** (`user_crud_tests.sh`)
+   ```bash
+   cd scripts/testing
+   ./user_crud_tests.sh
+   ```
+
+These scripts test all CRUD operations, validation, security features, and error handling scenarios.
+
+### PHPUnit Tests
+
+Run the Laravel test suite:
+```bash
+php artisan test
+```
+
 ## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
